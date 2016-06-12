@@ -244,7 +244,7 @@ namespace Tests
             string docTitle = DocumentationPage.GetDocTitle();
 
             Assert.IsTrue(
-               docTitle.Contains(title),
+               docTitle.ToLower().Contains(title.ToLower()),
                @"The shown content is {0} when {1} is chosen in the table of content on Documentation page",
                docTitle,
                parts[0]);
