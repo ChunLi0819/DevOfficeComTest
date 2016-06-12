@@ -217,5 +217,41 @@ namespace Tests
             Assert.IsTrue(DocumentationPage.CanEditInGitHub(),
                 "Should be able to edit Office add-in page in github");
         }
+    
+        /// <summary>
+        /// Check whether the nav list item can refer to the correct doc
+        /// </summary>
+        [TestMethod]
+        public void BVT_S18_TC08_CanNavListItemReferToCorrectDoc()
+        {
+            Pages.Navigation.Select("Documentation", MenuItemOfDocumentation.OfficeAddin.ToString());
+            int layerCount = DocumentationPage.GetTOCLayer();
+            int randomIndex = new Random().Next(layerCount);
+            string levelItem = DocumentationPage.GetTOCItem(randomIndex, true);
+            string[] parts = levelItem.Split(new char[] { ',' });
+            string[] tocPath = parts[0].Split(new char[] { '>' });
+            string title = tocPath[tocPath.Length - 1];
+            string link = parts[1];
+            for (int j = 0; j < tocPath.Length; j++)
+            {
+                //Avoid to fold the sublayer
+                if (!DocumentationPage.SubLayerDisplayed(tocPath[j]))
+                {
+                    Utility.Click(tocPath[j]);
+                }
+            }
+            Browser.Wait(TimeSpan.FromSeconds(int.Parse(Utility.GetConfigurationValue("WaitTime"))));
+            string docTitle = DocumentationPage.GetDocTitle();
+
+            Assert.IsTrue(
+               docTitle.Contains(title),
+               @"The shown content is {0} when {1} is chosen in the table of content on Documentation page",
+               docTitle,
+               parts[0]);
+            for (int k = tocPath.Length - 1; k >= 0; k--)
+            {
+                Utility.Click(tocPath[k]);
+            }
+        }
     }
 }

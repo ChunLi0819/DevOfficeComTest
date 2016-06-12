@@ -14,7 +14,7 @@ namespace TestFramework
         }
 
         public static string CurrentVideoTitle = string.Empty;
-
+        
         /// <summary>
         /// Check a build video's Twitter-shared link
         /// </summary>
@@ -59,6 +59,21 @@ namespace TestFramework
                 }
             }
             videoTitle = string.Empty;
+        }
+
+        /// <summary>
+        /// Go to a video's link
+        /// </summary>
+        /// <param name="videoIndex">Video index</param>
+        /// <returns>The video's expected link</returns>
+        public static string GotoVideoLink(int videoIndex)
+        {
+            var element = Browser.webDriver.FindElements(By.CssSelector("div.hasDuration.video-image.js-play"))[videoIndex];
+            string videoLink = Browser.BaseAddress + "/build-videos#?" + element.GetAttribute("id");
+            CurrentVideoTitle = Browser.webDriver.FindElements(By.XPath("//div[@class='videoText']/p[@class='video-title js-play']"))[videoIndex].GetAttribute("title");
+            Browser.Goto(videoLink);
+            Browser.webDriver.Navigate().Refresh();
+            return videoLink;
         }
 
         /// <summary>

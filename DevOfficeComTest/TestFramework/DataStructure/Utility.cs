@@ -575,5 +575,31 @@ namespace TestFramework
                 return isValid;
             }
         }
+
+        /// <summary>
+        /// Find an link or a button role span according to the specific text and click it
+        /// </summary>
+        /// <param name="text">The text of the element</param>
+        public static void Click(string text)
+        {
+            var element = Browser.FindElement(By.LinkText(text));
+            //a link
+            if (element != null && element.Displayed)
+            {
+                Browser.Click(element);
+            }
+            else
+            {
+                IReadOnlyList<IWebElement> elements = Browser.webDriver.FindElements(By.XPath("//*[@role='button']"));
+                foreach (IWebElement elementToClick in elements)
+                {
+                    if (elementToClick.GetAttribute("innerHTML").Equals(text) && (elementToClick.Displayed))
+                    {
+                        Browser.Click(elementToClick);
+                        break;
+                    }
+                }
+            }
+        }
     }
 }

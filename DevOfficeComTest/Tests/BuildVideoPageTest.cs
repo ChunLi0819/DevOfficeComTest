@@ -88,5 +88,26 @@ namespace Tests
             Assert.IsTrue(BuildVideoPage.IsVideoPlaying(out message), message);
             BuildVideoPage.CloseVideo();
         }
+
+        /// <summary>
+        /// Check whether can play a video by going to the video's link directly
+        /// </summary>
+        [TestMethod]
+        public void BVT_S19_TC04_CanPlayVideo()
+        {
+            Pages.Navigation.Select("Resources", "BuildVideos");
+            string message;
+            int randomIndex = new Random().Next(BuildVideoPage.VideoCount);
+
+            // Click Video's title
+            string videoLink=BuildVideoPage.GotoVideoLink(randomIndex);
+            Assert.IsTrue(BuildVideoPage.IsVideoPlaying(out message), 
+                "Video {0} should be playable by going to the link {1}. Actual status: {2}", 
+                BuildVideoPage.CurrentVideoTitle,
+                videoLink,
+                message);
+            BuildVideoPage.CloseVideo();
+
+        }
     }
 }
