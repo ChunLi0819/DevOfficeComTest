@@ -1,4 +1,6 @@
 ﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Interactions;
+using OpenQA.Selenium.Support.UI;
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -145,10 +147,7 @@ namespace TestFramework
                 {
                     item = path + title + "," + links[randomIndex].GetAttribute("href");
                 }
-            } while (links[randomIndex].GetAttribute("href").EndsWith("/")
-                //Beta reference->onenote doesn't have related document
-                || links[randomIndex].GetAttribute("href").EndsWith("api-reference/beta/resources/note")
-                );
+            } while (links[randomIndex].GetAttribute("href").EndsWith("/"));
             return item;
         }
 
@@ -182,6 +181,44 @@ namespace TestFramework
         {
             string docTitle = Browser.FindElement(By.CssSelector("div#docContent>div#OfficeDocDiv>div#holder>div#body>div>h1")).Text;
             return docTitle;
+        }
+
+        //public static void RightClickToOpenInNewTab(string docItem)
+        //{
+        //    var navListHead = Browser.FindElement(By.LinkText("OVERVIEW"));
+        //    int headY = navListHead.Location.Y;
+        //    var element = Browser.FindElement(By.LinkText(docItem));
+        //    int elementY = element.Location.Y;
+        //    if (element != null && element.Displayed)
+        //    {
+        //        Actions action = new Actions(Browser.webDriver);
+        //        action.MoveToElement(navListHead, 0, elementY - headY).ContextClick(element).SendKeys(Keys.ArrowDown).SendKeys(Keys.Return).Build().Perform();
+        //    }
+        //}
+
+        /// <summary>
+        /// Get all the available products
+        /// </summary>
+        /// <returns>a string array contains all the products</returns>
+        public static string[] GetProducts()
+        {
+            string[] products=new string[Browser.webDriver.FindElements(By.CssSelector("div#productFilter>select>option")).Count];
+            for (int i = 0; i < products.Length;i++ )
+            {
+                products[i] = Browser.FindElement(By.CssSelector("div#productFilter > select > option:nth-child("+(int)(i+1)+")")).Text;
+            }
+            return products;
+        }
+
+        /// <summary>
+        /// Change the selected product
+        /// </summary>
+        /// <param name="product">the expected product to select</param>
+        public static void ChangeProduct(string product)
+        {
+            var element = Browser.FindElement(By.XPath("//div[@id='productFilter']/select/option[@value='"+product+"']"));
+            SelectElement productList = new SelectElement(Browser.FindElement(By.CssSelector("div#productFilter > select")));
+            productList.SelectByValue(product);
         }
     }
 }

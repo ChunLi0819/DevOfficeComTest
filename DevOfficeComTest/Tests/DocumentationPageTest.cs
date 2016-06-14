@@ -205,7 +205,7 @@ namespace Tests
         public void BVT_S18_TC07_IsOfficeAddInDocPageCorrect()
         {
             Pages.Navigation.Select("Documentation", MenuItemOfDocumentation.OfficeAddin.ToString());
-            
+
             Assert.IsTrue(
             DocumentationPage.HasDocHeader("Docs"),
             "Office add in page should have 'Docs' header");
@@ -217,7 +217,7 @@ namespace Tests
             Assert.IsTrue(DocumentationPage.CanEditInGitHub(),
                 "Should be able to edit Office add-in page in github");
         }
-    
+
         /// <summary>
         /// Check whether the nav list item can refer to the correct doc
         /// </summary>
@@ -225,6 +225,7 @@ namespace Tests
         public void BVT_S18_TC08_CanNavListItemReferToCorrectDoc()
         {
             Pages.Navigation.Select("Documentation", MenuItemOfDocumentation.OfficeAddin.ToString());
+
             int layerCount = DocumentationPage.GetTOCLayer();
             int randomIndex = new Random().Next(layerCount);
             string levelItem = DocumentationPage.GetTOCItem(randomIndex, true);
@@ -232,9 +233,10 @@ namespace Tests
             string[] tocPath = parts[0].Split(new char[] { '>' });
             string title = tocPath[tocPath.Length - 1];
             string link = parts[1];
+            // Click the item from its toppest layer item to itself
             for (int j = 0; j < tocPath.Length; j++)
             {
-                //Avoid to fold the sublayer
+                //Avoid to fold up the sublayer
                 if (!DocumentationPage.SubLayerDisplayed(tocPath[j]))
                 {
                     Utility.Click(tocPath[j]);
@@ -243,15 +245,61 @@ namespace Tests
             Browser.Wait(TimeSpan.FromSeconds(int.Parse(Utility.GetConfigurationValue("WaitTime"))));
             string docTitle = DocumentationPage.GetDocTitle();
 
-            Assert.IsTrue(
-               docTitle.ToLower().Contains(title.ToLower()),
-               @"The shown content is {0} when {1} is chosen in the table of content on Documentation page",
-               docTitle,
-               parts[0]);
-            for (int k = tocPath.Length - 1; k >= 0; k--)
+            string urlString = Browser.Url;
+            //Remove the part "?products=" if there is any.
+            if (Browser.Url.Contains("?product="))
             {
-                Utility.Click(tocPath[k]);
+                int indexOfdocTitleEndInUrl = Browser.Url.IndexOf("?product=");
+                urlString = Browser.Url.Substring(0, indexOfdocTitleEndInUrl);
             }
+            Assert.IsTrue(
+               urlString.Contains(docTitle.ToLower().Replace(" ", "-"))
+               || urlString.Contains(tocPath[tocPath.Length - 1].ToLower().Replace(" ", "-")),
+               @"when {0} is chosen in doc nav list, the shown content {1} should be consistent with the actual url {2}",
+               parts[0],
+               docTitle,
+               Browser.Url);
         }
+
+        /// <summary>
+        /// Verify whether can add-in doc page's product can be changed
+        /// </summary>
+        [TestMethod]
+        public void BVT_S18_TC09_CanChangeDocProduct()
+        {
+            Pages.Navigation.Select("Documentation", MenuItemOfDocumentation.OfficeAddin.ToString());
+            string[] products = DocumentationPage.GetProducts();
+            int randomIndex = new Random().Next(products.Length);
+            DocumentationPage.ChangeProduct(products[randomIndex]);
+
+            Assert.IsTrue(Browser.Url.EndsWith("office-add-ins?product=" + products[randomIndex].ToLower()),
+                "The doc page's corresponding product should be {0}",
+                products[randomIndex]);
+        }
+
+        //[TestMethod]
+        //public void BVT_S18_TC10_CanRightClickToOpenDocInNewTab()
+        //{
+        //    Pages.Navigation.Select("Documentation", MenuItemOfDocumentation.OfficeAddin.ToString());
+
+        //    int layerCount = DocumentationPage.GetTOCLayer();
+        //    int randomIndex = new Random().Next(layerCount);
+        //    string levelItem = DocumentationPage.GetTOCItem(randomIndex, true);
+        //    string[] parts = levelItem.Split(new char[] { ',' });
+        //    string[] tocPath = parts[0].Split(new char[] { '>' });
+        //    string title = tocPath[tocPath.Length - 1];
+        //    string link = parts[1];
+
+        //    for (int j = 0; j < tocPath.Length-1; j++)
+        //    {
+        //        //Avoid to fold the sublayer
+        //        if (!DocumentationPage.SubLayerDisplayed(tocPath[j]))
+        //        {
+        //            Utility.Click(tocPath[j]);
+        //        }
+        //    }
+        //    DocumentationPage.RightClickToOpenInNewTab(tocPath[tocPath.Length - 1]);
+        //    Assert.IsTrue(true);
+        //}
     }
 }
