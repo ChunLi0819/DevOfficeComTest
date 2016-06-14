@@ -4,7 +4,7 @@ if "%*"=="/?" (
  echo Options:
  echo.
  echo [/Browser:^<Browser Name^>]
- echo The browser used to access the site. The value should be one of following: IE32, IE64, Chrome, Firefox. test
+ echo The browser used to access the site. The value should be one of following: IE32, IE64, Chrome, Firefox.
  echo.
  echo [/BaseAddress:^<Base Url^>]
  echo The root url of the site under test.
