@@ -36,13 +36,13 @@ namespace TestFramework
                         element = GraphBrowser.FindElement(By.CssSelector("div#layout-featured>div>article>div>div>div>div"));
                     }
                     string Url = ((string)(GraphBrowser.webDriver as IJavaScriptExecutor).ExecuteScript(@"return getComputedStyle(arguments[0])['background-image'];", element)).Replace(@"url(""", "").Replace(@""")", "");
-                    return GraphUtility.ImageExist(Url);
+                    return GraphUtility.FileExist(Url);
                 case (GraphPageImages.Others):
                     var elements = GraphBrowser.Driver.FindElements(By.CssSelector("img"));
                     foreach (IWebElement item in elements)
                     {
                         Url = item.GetAttribute("src");
-                        if (!GraphUtility.ImageExist(Url))
+                        if (!GraphUtility.FileExist(Url))
                         {
                             return false;
                         }

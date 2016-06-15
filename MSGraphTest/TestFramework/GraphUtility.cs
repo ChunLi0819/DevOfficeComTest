@@ -31,7 +31,7 @@ namespace TestFramework
         /// <returns>Trye if yes, else no.</returns>
         public static bool IsMenuContentDisplayed()
         {
-            return GraphBrowser.FindElement(By.CssSelector("#menu-content")).Displayed;
+            return GraphBrowser.FindElement(By.CssSelector("#menu-items")).Displayed;
         }
 
         /// <summary>
@@ -59,8 +59,7 @@ namespace TestFramework
         /// <returns>The title of document</returns>
         public static string GetDocTitle()
         {
-            string docTitle;
-            var title = GraphBrowser.FindElementInFrame("docframe", By.TagName("h1"), out docTitle);
+            string docTitle = GraphBrowser.FindElement(By.CssSelector("div#GraphDocDiv>div#holder>div#body>div>div>h1")).Text;
             return docTitle;
         }
 
@@ -83,9 +82,9 @@ namespace TestFramework
             {
                 if (style.Contains("background-image"))
                 {
-                    int startIndex = style.IndexOf("/");
-                    //2 is the length of ")
-                    url = style.Substring(startIndex).Substring(0, style.Substring(startIndex).Length - 2);
+                    int startIndex = style.IndexOf("http");
+                    //2 is the length of ") or ')
+                    url = style.Substring(startIndex, style.Substring(startIndex).Length - 2);
                     break;
                 }
             }
@@ -509,18 +508,7 @@ namespace TestFramework
         /// <returns>True if yes, else no.</returns>
         public static bool ValidateDocument(string tocLink)
         {
-            string lcName = GetLCN();
-
-            if (tocLink.Contains(GraphBrowser.BaseAddress))
-            {
-                tocLink = tocLink.Replace(GraphBrowser.BaseAddress, "");
-            }
-            Regex reg = new Regex("(" + GraphBrowser.BaseAddress + @")?(/docs)?(" + tocLink.Replace(lcName + "/", "").Replace("/docs", "") + "){1}");
-
-            string elementSrc = GraphBrowser.FindElement(By.XPath("//iframe[@id='docframe']")).GetAttribute("src").Replace(lcName + "/", "").Replace("en-us/", "").Replace(".htm", "").Replace("/GraphDocuments", "");
-            bool isMatched = reg.IsMatch(elementSrc);
-
-            return isMatched;
+            return FileExist(tocLink);
         }
 
 
@@ -549,11 +537,11 @@ namespace TestFramework
         }
 
         /// <summary>
-        /// Verify whether a url refer to a valid image
+        /// Verify whether a url refer to a valid file/image
         /// </summary>
-        /// <param name="Url">The image url</param>
+        /// <param name="Url">The file/image url</param>
         /// <returns>True if yes, else no</returns>
-        public static bool ImageExist(string Url)
+        public static bool FileExist(string Url)
         {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Url);
             request.Timeout = 15000;

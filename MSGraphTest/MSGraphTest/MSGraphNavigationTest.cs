@@ -150,9 +150,9 @@ namespace MSGraphTest
 
             string navPage = navOptions[new Random().Next(navOptions.Length)];
             GraphPages.Navigation.Select(navPage);
-            string prefix = GraphUtility.RemoveRedundantPartsfromExtractBaseAddress();
             string imageUrl = GraphUtility.GetGraphBannerImageUrl();
-            Assert.IsTrue(GraphUtility.ImageExist(prefix + imageUrl), "The banner image should be valid to load");
+           
+            Assert.IsTrue(GraphUtility.FileExist(imageUrl), "The banner image should be valid to load");
         }
 
         /// <summary>
