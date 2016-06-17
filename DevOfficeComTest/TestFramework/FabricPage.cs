@@ -31,8 +31,8 @@ namespace TestFramework
         {
             int waitTime = Int32.Parse(Utility.GetConfigurationValue("WaitTime"));
             string itemToSelect = EnumExtension.GetDescription(item);
-            Browser.Wait(By.XPath("//ul[@class='docs-Nav']/li/a[text()='" + itemToSelect + "']"));
-            var element = Browser.FindElement(By.XPath("//ul[@class='docs-Nav']/li/a[text()='" + itemToSelect + "']"));
+            Browser.Wait(By.XPath("//div[@class='docs-Nav']/div/a[text()='" + itemToSelect + "']"));
+            var element = Browser.FindElement(By.XPath("//div[@class='docs-Nav']/div/a[text()='" + itemToSelect + "']"));
             Browser.Click(element);
             Browser.Wait(TimeSpan.FromSeconds(waitTime));
         }
@@ -67,8 +67,8 @@ namespace TestFramework
         /// <returns>True if yes, else no.</returns>
         public bool IsValidLeftNavItem(int index, out string itemText)
         {
-            Browser.Wait(By.CssSelector("ul.LeftNav-links > li:nth-child(" + (int)(index + 1) + ") > a"));
-            var element = Browser.FindElement(By.CssSelector("ul.LeftNav-links > li:nth-child(" + (int)(index + 1) + ") > a"));
+            Browser.Wait(By.CssSelector("div.LeftNav-links > div:nth-child(" + (int)(index + 1) + ") > a"));
+            var element = Browser.FindElement(By.CssSelector("div.LeftNav-links > div:nth-child(" + (int)(index + 1) + ") > a"));
             itemText = element.Text;
             string href = element.GetAttribute("href");
             return Utility.FileExist(href);
@@ -90,7 +90,7 @@ namespace TestFramework
         /// <returns>Trye if yes, else no.</returns>
         public static bool IsToggleMenuIconDisplayed()
         {
-            return Browser.FindElement(By.CssSelector("div.docs-MobileNav-menuButton")).Displayed;
+            return Browser.FindElement(By.CssSelector("div.docs-MobileNav")).Displayed;
         }
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace TestFramework
         /// </summary>
         public static void ToggleMobileMenu()
         {
-            var element = Browser.FindElement(By.CssSelector("div.docs-MobileNav-menuButton"));
+            var element = Browser.FindElement(By.CssSelector("div.docs-MobileNav>a.docs-MobileNav-menuButton"));
             var panelElement = Browser.FindElement(By.CssSelector("div.ms-Panel-main"));
             if (element.Displayed && !panelElement.Displayed)
             {

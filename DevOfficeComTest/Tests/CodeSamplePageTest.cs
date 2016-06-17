@@ -628,17 +628,27 @@ namespace Tests
             bool hasFounded = false;
 
             List<SearchedResult> resultList = Utility.GetFilterResults();
-            foreach (SearchedResult resultInfo in resultList)
+            if (resultList.Count > 0)
             {
-                bool isNameMatched = resultInfo.Name.ToLower().Contains("azure ad");
-                bool isDescriptionMatched = resultInfo.Description.ToLower().Contains("azure ad");
-                if (isNameMatched || isDescriptionMatched)
+                foreach (SearchedResult resultInfo in resultList)
                 {
-                    hasFounded = true;
-                    break;
+                    bool isNameMatched = resultInfo.Name.ToLower().Contains("azure ad");
+                    bool isDescriptionMatched = resultInfo.Description.ToLower().Contains("azure ad");
+                    if (isNameMatched || isDescriptionMatched)
+                    {
+                        hasFounded = true;
+                        break;
+                    }
+                }
+                if (!hasFounded)
+                {
+                    Assert.Inconclusive(@"Under ""Azure AD Users and Groups"" type, none of the searched results explicitly contain the searh text in title or description");
                 }
             }
-            Assert.IsTrue(hasFounded, "There should be at least one sample which meets the filter Azure AD Users and Groups");
+            else
+            {
+                Assert.Inconclusive(@"No code sample is found under ""Azure AD Users and Groups"" type");
+            }
         }
 
         /// <summary>
