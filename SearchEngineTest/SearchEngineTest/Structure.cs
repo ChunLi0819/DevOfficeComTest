@@ -15,7 +15,9 @@ namespace SearchEngineTest
         [Description("dev office")]
         DevOffice,
         [Description("Office Dev Center")]
-        OfficeDevCenter
+        OfficeDevCenter,
+        [Description("Office Add-ins")]
+        OfficeAddins
     }
 
     /// <summary>
