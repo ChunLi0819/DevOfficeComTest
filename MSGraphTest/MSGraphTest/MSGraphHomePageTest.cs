@@ -69,7 +69,7 @@ namespace MSGraphTest
         public void Acceptance_Graph_S02_TC02_ClickSeeOverviewCanShowDocumentaionPage()
         {
             GraphUtility.SelectToSeeOverView();
-            bool isOverview = GraphUtility.ValidateDocument(GraphBrowser.BaseAddress + "/overview/overview");
+            bool isOverview = GraphUtility.ValidateDocument(GraphBrowser.BaseAddress + "/docs/overview/overview");
             string docTitle = GraphUtility.GetDocTitle();
             Assert.IsTrue(
                 isOverview,

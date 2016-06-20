@@ -87,8 +87,8 @@ namespace TestFramework
         /// </summary>
         public void SelectMSGraph()
         {
-            Browser.Wait(By.XPath("//img/parent::a[contains(@href,'graph')]"));
-            var element = Browser.FindElement(By.XPath("//img/parent::a[contains(@href,'graph')]"));
+            Browser.Wait(By.CssSelector("a#graph-logo"));
+            var element = Browser.FindElement(By.CssSelector("a#graph-logo"));
             Browser.Click(element);
         }
 

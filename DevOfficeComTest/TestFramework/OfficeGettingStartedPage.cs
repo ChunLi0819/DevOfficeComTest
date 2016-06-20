@@ -26,9 +26,13 @@ namespace TestFramework
         public bool CanLoadImage()
         {
             IWebElement element = Browser.Driver.FindElement(By.Id("banner-image"));
-            string Url = element.GetAttribute("style");
-            Url = Browser.BaseAddress + Url.Substring(Url.IndexOf('/'), Url.LastIndexOf('"') - Url.IndexOf('/'));
-            return Utility.FileExist(Url);
+            string imageUrl = element.GetAttribute("style");
+            int urlStartIndex = imageUrl.IndexOf("http");
+            int urlEndIndex = imageUrl.LastIndexOf(")");
+            //1 is for character ' or "
+            int urlLength = urlEndIndex - urlStartIndex-1;
+            imageUrl = imageUrl.Substring(urlStartIndex, urlLength);
+            return Utility.FileExist(imageUrl);
         }
 
         public OfficeGettingStartedPage()

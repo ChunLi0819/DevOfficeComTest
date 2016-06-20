@@ -168,10 +168,10 @@ namespace MSGraphTest
                     GraphUtility.Click(tocPath[j]);
                 }
             }
-            GraphBrowser.Wait(TimeSpan.FromSeconds(5));
-            bool isCorrectDoc = GraphUtility.ValidateDocument(link);
+            GraphBrowser.Wait(TimeSpan.FromSeconds(int.Parse(GraphUtility.GetConfigurationValue("WaitTime"))));
+            bool isCorrectDoc = GraphUtility.ValidateDocument(link); 
             string docTitle = GraphUtility.GetDocTitle();
-
+            
             Assert.IsTrue(
                isCorrectDoc,
                @"The shown content is {0} when {1} is chosen in the table of content on Documentation page",
