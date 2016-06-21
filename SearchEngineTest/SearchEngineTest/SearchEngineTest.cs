@@ -147,6 +147,20 @@ namespace SearchEngineTest
                 GetDescription(SearchSite.DevOffice));
 
             WebDriver.Navigate().Back();
+            time = DateTime.Now;
+            isFounded = CanFindSiteinSearchResults(SearchSite.OfficeAddins,
+                "dev.office.com",
+                out ranking);
+
+            Trace.WriteLine(String.Format("Keywords:{0} Ranking:{1}", GetDescription(SearchSite.OfficeAddins), ranking + 1));
+            Assert.IsTrue(isFounded,
+                "{0}: The result {1} Office Dev Center production site on {2} when searching {3}.",
+                time.ToString(),
+                isFounded ? String.Format(" at position {0} is", ranking + 1) : "s in top 5 don't contain",
+                searchEngine,
+                GetDescription(SearchSite.OfficeAddins));
+
+            WebDriver.Navigate().Back();
         }
 
         /// <summary>
